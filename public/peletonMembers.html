@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Member</title>
+</head>
+<body>
+    <h1 id="hPeleton">Peleton</h1>
+    <form action="/member/peleton" method="GET">
+        <strong><p id="pLeader">Leder: </p></strong> 
+
+        <table id="tblMembers">
+            <tr>
+                <th>Fornavn</th> <th>Etternavn</th> <th>Mobil</th> <th>Rolle</th>
+            </tr>
+        
+        </table>
+    <button type="submit" name="logout">Logout</button>
+    
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchPeletons();
+        });
+        
+        async function fetchPeletons() {
+            try {
+                const response = await fetch('/api/peletonMember');
+                const peletonMembers = await response.json();
+                populatePeletonList(peletonMembers);
+            } catch (error) {
+                console.error('Failed to fetch peletonmembers:', error);
+            }
+        }
+
+        function populatePeletonList(members) {
+            const peletonLeader = document.getElementById('pLeader');
+            const peletonMembers = document.getElementById('tblMembers');
+            const headerPeleton = document.getElementById('hPeleton');
+            members.forEach(member => {
+                if (member.role === 'Leader') {
+                    console.log("leader", member)
+                    headerPeleton.innerHTML = member.peleton
+                    peletonLeader.innerHTML = 'Leder er: ' + member.firstname + ' ' + member.lastname +'<br>Telefon: ' + member.mobile;
+                }
+                else {
+                    console.log(member)
+                    const row = document.createElement('tr')
+                    peletonMembers.appendChild(row)
+                    const tdfn = document.createElement('td')
+                    tdfn.innerHTML = member.firstname 
+                    peletonMembers.appendChild(tdfn);
+                    const tdln = document.createElement('td')
+                    tdln.innerHTML = member.lastname 
+                    peletonMembers.appendChild(tdln);
+                    const tdmob = document.createElement('td')
+                    tdmob.innerHTML = member.mobile 
+                    peletonMembers.appendChild(tdmob);
+                    const tdrol = document.createElement('td')
+                    tdrol.innerHTML = member.role_id
+                    peletonMembers.appendChild(tdrol);
+        
+                }
+            });
+        }
+
+        /*
+        function populatePeletonDropdown(peletons) {
+            const peletonSelect = document.getElementById('peleton');
+            peletons.forEach(peleton => {
+                let option = document.createElement('option');
+                option.value = peleton.id;
+                option.textContent = peleton.name;
+                peletonSelect.appendChild(option);
+            });
+        }
+        */
+        
+    </script>
+</body>
+</html>
