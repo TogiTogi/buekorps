@@ -70,7 +70,7 @@ function checkUserPassword(username, password){
 //  <form action='/register' method="POST">
 app.post('/register', (req, res) => {
     console.log(req.body)
-    addUser(req.body.username, req.body.firstname, req.body.lastname, req.body.mobile, req.body.email, req.body.password)
+    addUser(req.body.username, req.body.firstname, req.body.lastname, req.body.mobile, req.body.email, req.body.password, req.body.peleton_id)
     res.sendFile(path.join(__dirname, "public/loginForm.html"));
      
 });
@@ -127,10 +127,6 @@ function checkRole(role) {
     };
 }
 
-
-
-
-
 async function getUsers(request, response) {
 
     const sql=db.prepare('SELECT username, firstname, lastname, mobile, roles.name as role, peleton.name as peleton, kompani.name as kompani FROM user '+
@@ -182,7 +178,7 @@ function addUser(username, firstName, lastName, mobile, email, password) {
 
     // Insert the user into the database with the hashed password
     const sql = db.prepare("INSERT INTO user (username, firstName, lastName, mobile, role_id, peleton_id, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    const info = sql.run(username, firstName, lastName, mobile, 1, 1, email, hashedPassword);
+    const info = sql.run(username, firstName, lastName, mobile, 1, peleton_id, email, hashedPassword);
     return info;
 }
 
